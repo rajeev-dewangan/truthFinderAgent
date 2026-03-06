@@ -10,7 +10,8 @@ export interface ClearResponse {
   message: string;
 }
 
-const API_BASE_URL = "https://smart-mutually-grubworm.ngrok-free.app";
+// const API_BASE_URL = "https://smart-mutually-grubworm.ngrok-free.app";
+const API_BASE_URL = "https://1w0rialcfb.execute-api.eu-north-1.amazonaws.com/dev"
 
 export const chatService = {
   async sendMessage(message: string, userId: string): Promise<ChatResponse> {
@@ -18,9 +19,9 @@ export const chatService = {
       const response = await fetch(`${API_BASE_URL}/chat`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
           // ngrok-skip-browser-warning is often needed for free ngrok tunnels
-          "ngrok-skip-browser-warning": "true",
+          // "ngrok-skip-browser-warning": "true",
         },
         body: JSON.stringify({
           message,
@@ -29,7 +30,9 @@ export const chatService = {
       });
 
       if (!response.ok) {
-        throw new Error(`API error: ${response.statusText}`);
+        const errorText = await response.text();
+        console.error(`API error response: ${response.status} ${response.statusText}`, errorText);
+        throw new Error(`API error: ${response.status} ${response.statusText}`);
       }
 
       return await response.json();
@@ -44,8 +47,8 @@ export const chatService = {
       const response = await fetch(`${API_BASE_URL}/clear`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
+          "Content-Type": "application/json"
+          // "ngrok-skip-browser-warning": "true",
         },
         body: JSON.stringify({
           user_id: userId,
